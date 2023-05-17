@@ -35,9 +35,18 @@ int main(int argc,  char *argv[]) {
 	return 0;
 }
 
+bool	is_dead(t_philo *philo){return true;}
+bool	is_done(t_philo *philo){return true;}
+
 void	*philo_routine(void *arg) {
 	t_philo *philo = (t_philo *)arg;
 
+	while (!is_dead(philo) || is_done(philo)) {
+		// TODO: フォークの取得処理
+		// TODO: 食事処理
+		// TODO: スリープ処理
+		// TODO: 思考処理
+	}
 	return NULL;
 }
 

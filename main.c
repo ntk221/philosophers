@@ -35,13 +35,18 @@ int main(int argc,  char *argv[]) {
 	return 0;
 }
 
+void	*philo_routine(void *arg) {
+	t_philo *philo = (t_philo *)arg;
+
+	return NULL;
+}
+
 t_philo *create_philo(t_data *data)
 {
-	int i;
 	t_philo* philosophers;
     	t_fork forks[data->philo_num]; 
 
-    	for (i = 0; i < data->philo_num; i++) {
+    	for (int i = 0; i < data->philo_num; i++) {
         	pthread_mutex_init(&forks[i].mutex, NULL);
     	}
 
@@ -51,7 +56,7 @@ t_philo *create_philo(t_data *data)
 	    	exit(1);
     	}
 
-    	for (i = 0; i < data->philo_num; i++) {
+    	for (int i = 0; i < data->philo_num; i++) {
         	t_philo *philo = &philosophers[i];
         	philo->leftFork = &forks[i];
 		philo->rightFork = &forks[(i + 1) % data->philo_num];
@@ -59,10 +64,13 @@ t_philo *create_philo(t_data *data)
 		philo->eat_count = 0; 
         	philo->done = false; 
         	philo->status = THINKING; 
+
+		if (pthread_create(&philo->thread, NULL, philo_routine, philo) != 0) {
+			printf("Error: failed to create thread");
+			exit(1);
+		}
 	}
-
-	// TODO: 哲学者スレッドの作成
-
+	
     	return philosophers;
 }
 
@@ -70,6 +78,7 @@ void	print_philosophers(t_philo *philos, int num) {
 	for (int i = 0; i < num; i++) {
 		printf("philo->id: %d\n", philos[i].id);
 		printf("philo->status: %d\n", philos[i].status == THINKING);
+		printf("philo->status: %lu\n", (unsigned long)philos[i].thread);
 	}
 }
 

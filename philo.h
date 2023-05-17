@@ -20,6 +20,8 @@ typedef struct {
 	int  	eat_count;
 	bool	done;
 	philo_status status;
+
+	pthread_t thread;
 } t_philo;
 
 typedef struct {

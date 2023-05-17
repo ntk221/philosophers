@@ -8,7 +8,7 @@ int main(int argc,  char *argv[]) {
 	t_data	data;
 	t_philo *philos;
 
-	if (argc != 5&& argc != 6) 
+	if (argc != 5 && argc != 6) 
 	{
 		printf("Error\n");
 		return 1;
@@ -39,9 +39,9 @@ t_philo *create_philo(t_data *data)
 {
 	int i;
 	t_philo* philosophers;
-    	t_fork forks[PHILO_NUM]; 
+    	t_fork forks[data->philo_num]; 
 
-    	for (i = 0; i < PHILO_NUM; i++) {
+    	for (i = 0; i < data->philo_num; i++) {
         	pthread_mutex_init(&forks[i].mutex, NULL);
     	}
 
@@ -54,7 +54,7 @@ t_philo *create_philo(t_data *data)
     	for (i = 0; i < data->philo_num; i++) {
         	t_philo *philo = &philosophers[i];
         	philo->leftFork = &forks[i];
-		philo->rightFork = &forks[(i + 1) % PHILO_NUM];
+		philo->rightFork = &forks[(i + 1) % data->philo_num];
 		philo->id = i + 1; 
 		philo->eat_count = 0; 
         	philo->done = false; 
@@ -72,13 +72,14 @@ void	print_philosophers(t_philo *philos, int num) {
 
 bool	get_data(t_data *data, char *argv[]) {
 	
-	data->philo = malloc(sizeof(t_philo) *  PHILO_NUM);
-	if (data->philo == NULL)
-		return false;
-
 	data->philo_num = atoi(argv[1]);
 	data->time_to_die = atoi(argv[2]);
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
+
+	data->philo = malloc(sizeof(t_philo) *  data->philo_num);
+	if (data->philo == NULL)
+		return false;
+
 	return true;
 }

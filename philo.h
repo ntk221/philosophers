@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include <pthread.h>
 
-# define PHILO_NUM	5
-
 typedef enum {
 	THINKING,
 	EATING,

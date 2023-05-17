@@ -16,13 +16,11 @@ typedef struct {
 } t_fork;
 
 typedef struct {
-	t_fork *leftFork;
-	t_fork *rightFork;
-	int  id;
-	int  time_to_die;
-	int  time_to_eat;
-	int  time_to_sleep;
-	int  eat_count;
+	t_fork 	*leftFork;
+	t_fork 	*rightFork;
+	int  	id;
+	int  	eat_count;
+	bool	done;
 	philo_status status;
 } t_philo;
 
@@ -47,7 +45,8 @@ bool	get_data(t_data *data, char *argv[]) {
 	return true;
 }
 
-
+t_philo 	*create_philo(t_data *data);
+void		print_philosophers(t_philo *philo, int num);
 
 int main(int argc,  char *argv[]) {
 	t_data	data;
@@ -68,8 +67,45 @@ int main(int argc,  char *argv[]) {
 	}
 
 	printf("%d %d %d %d\n", data.philo_num, data.time_to_die, data.time_to_eat, data.time_to_sleep);
-	
 
+	t_philo *philos = create_philo(&data);
+	
+	print_philosophers(philos, data.philo_num);
+	
 	return 0;
 }
 
+t_philo *create_philo(t_data *data)
+{
+    int i;
+    t_fork forks[PHILO_NUM]; 
+
+    for (i = 0; i < PHILO_NUM; i++) {
+        pthread_mutex_init(&forks[i].mutex, NULL);
+    }
+
+    t_philo* philosophers = malloc(sizeof(t_philo) * data->philo_num);
+    if (philosophers == NULL) {
+	    printf("Error\n");
+	    exit(1);
+    }
+
+    for (i = 0; i < data->philo_num; i++) {
+        t_philo *philo = &philosophers[i];
+        philo->leftFork = &forks[i];
+	philo->rightFork = &forks[(i + 1) % PHILO_NUM];
+	philo->id = i + 1; 
+	philo->eat_count = 0; 
+        philo->done = false; 
+        philo->status = THINKING; 
+    }
+
+    return philosophers;
+}
+
+void	print_philosophers(t_philo *philos, int num) {
+	for (int i = 0; i < num; i++) {
+		printf("philo->id: %d\n", philos[i].id);
+		printf("philo->status: %d\n", philos[i].status == THINKING);
+	}
+}

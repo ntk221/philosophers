@@ -60,6 +60,9 @@ t_philo *create_philo(t_data *data)
         	philo->done = false; 
         	philo->status = THINKING; 
 	}
+
+	// TODO: 哲学者スレッドの作成
+
     	return philosophers;
 }
 

@@ -1,7 +1,7 @@
 #include "philo.h"
 
 bool		get_data(t_data *data, char *argv[]);
-t_philo 	*create_philo(t_data *data);
+t_philo 	*create_philo(t_data *data, t_fork forks[]);
 void		print_philosophers(t_philo *philo, int num);
 
 int main(int argc,  char *argv[]) {
@@ -26,22 +26,29 @@ int main(int argc,  char *argv[]) {
 		return (0);
 	}
 
-	printf("%d %d %d %d\n", data.philo_num, data.time_to_die, data.time_to_eat, data.time_to_sleep);
 
-	philos = create_philo(&data);
+	t_fork forks[(&data)->philo_num]; 
+
+	// printf("%d %d %d %d\n", data.philo_num, data.time_to_die, data.time_to_eat, data.time_to_sleep);
+
+	philos = create_philo(&data, forks);
 	
 	print_philosophers(philos, data.philo_num);
 	
+	for(int i = 0; i < (&data)->philo_num; i++) {
+		pthread_join(philos->thread, NULL);
+	}
 	return 0;
 }
 
-bool	is_dead(t_philo *philo){return true;}
-bool	is_done(t_philo *philo){return true;}
+// bool	is_dead(t_philo *philo){return true;}
+bool	is_done(t_philo *philo){return philo->done;}
 
 void	*philo_routine(void *arg) {
 	t_philo *philo = (t_philo *)arg;
 
-	while (!is_dead(philo) || !is_done(philo)) {
+	printf("philosopher %d takes a seat\n", philo->id);
+	while (!is_done(philo)) {
 		// TODO: フォークの取得処理
 		// TODO: 食事処理
 		// TODO: スリープ処理
@@ -50,10 +57,9 @@ void	*philo_routine(void *arg) {
 	return NULL;
 }
 
-t_philo *create_philo(t_data *data)
+t_philo *create_philo(t_data *data, t_fork forks[])
 {
 	t_philo* philosophers;
-    	t_fork forks[data->philo_num]; 
 
     	for (int i = 0; i < data->philo_num; i++) {
         	pthread_mutex_init(&forks[i].mutex, NULL);
@@ -72,6 +78,7 @@ t_philo *create_philo(t_data *data)
 		philo->id = i + 1; 
 		philo->eat_count = 0; 
         	philo->done = false; 
+		philo->data = data;
         	philo->status = THINKING; 
 
 		if (pthread_create(&philo->thread, NULL, philo_routine, philo) != 0) {

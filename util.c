@@ -1,7 +1,6 @@
 #include "philo.h"
 #include <sys/time.h>
 
-
 long long timestamp(void)
 {
 	struct timeval	tv;

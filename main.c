@@ -41,7 +41,7 @@ bool	is_done(t_philo *philo){return true;}
 void	*philo_routine(void *arg) {
 	t_philo *philo = (t_philo *)arg;
 
-	while (!is_dead(philo) || is_done(philo)) {
+	while (!is_dead(philo) || !is_done(philo)) {
 		// TODO: フォークの取得処理
 		// TODO: 食事処理
 		// TODO: スリープ処理

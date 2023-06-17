@@ -1,3 +1,4 @@
+use my_lib::msleep;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -14,14 +15,16 @@ struct Philo {
     id: usize,
     left_fork: Arc<Mutex<()>>,
     right_fork: Arc<Mutex<()>>,
+    data: &'static Data,
 }
 
 impl Philo {
-    fn new(id: usize, left_fork: Arc<Mutex<()>>, right_fork: Arc<Mutex<()>>) -> Philo {
+    fn new(id: usize, left_fork: Arc<Mutex<()>>, right_fork: Arc<Mutex<()>>, data: &Data) -> Philo {
         Philo {
             id,
             left_fork,
             right_fork,
+            data,
         }
     }
 
@@ -108,7 +111,7 @@ fn main() {
         .map(|i: usize| {
             let left_fork = forks[i].clone();
             let right_fork = forks[(i + 1) % data.philo_num].clone();
-            Philo::new(i + 1, left_fork, right_fork)
+            Philo::new(i + 1, left_fork, right_fork, data)
         })
         .collect();
 

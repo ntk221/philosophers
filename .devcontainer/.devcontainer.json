@@ -1,0 +1,17 @@
+{
+  "image": "rustlang/rust:nightly",
+  "extensions": [
+    "vadimcn.vscode-lldb",
+    "rust-lang.rust-analyzer",
+    "vim"
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "[rust]": {
+      "editor.formatOnSave": true
+    },
+    "rust-client.autoStartRustfmt": true
+  },
+  "forwardPorts": [],
+  "postCreateCommand": "cargo build"
+}
